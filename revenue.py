@@ -1,19 +1,12 @@
 import traceback
-import re
-from enum import Enum
 
 import excel
 import utils
+import model
 
 RANGE = 'A2:C8'
 
-# this related to `first_col` param of write_unit function
-class REVENUE_TYPES(Enum):
-    A = '2022'
-    B = '2021'
 
-    def is_a(self):
-        return self == REVENUE_TYPES.A
 
 class Revenue:
     def __init__(self, id, cols):
@@ -62,6 +55,7 @@ def write_unit(target_sheet, target_range: WriteRange, revenue: Revenue, first_c
     range = target_range.get_range(revenue.id)
     if range is not None:
         for cols in excel.iter_cols_by_range(target_sheet, range):
+            # repalce i with enumerate
             i = 0
             for cell in cols:
                 if first_col:
@@ -75,15 +69,10 @@ def write_unit(target_sheet, target_range: WriteRange, revenue: Revenue, first_c
 
 
 
-
-ALL_NUMBER = re.compile(r'\d+')
-
-def parse_write_range(target_sheet):
+def parse_write_range(sum_sheet):
     range = WriteRange()
-    cols = target_sheet['A']
-    for cell in cols:
-        if cell.value is not None and ALL_NUMBER.match(str(cell.value)):
-            range.set_range(cell.value, cell.row)
+    for cell in utils.id_cols(sum_sheet):
+        range.set_range(cell.value, cell.row)
 
     return range
 
@@ -112,15 +101,12 @@ def write_all(target_file, save_filename, all_revenues):
 def target_revenue_sheetnames(workbook):
     keyword = '营收'
     result = list(filter(lambda x: keyword in x, workbook.sheetnames)) 
-    print(f'results: {result}')
     if result is not None:
         for name in result:
-            if REVENUE_TYPES.A.value in name:
-                print(f'results:a {name}')
-                yield (REVENUE_TYPES.A, name)
-            if REVENUE_TYPES.B.value in name:
-                print(f'results:b {name}')
-                yield (REVENUE_TYPES.B, name)
+            if model.REVENUE_TYPES.A.value in name:
+                yield (model.REVENUE_TYPES.A, name)
+            if model.REVENUE_TYPES.B.value in name:
+                yield (model.REVENUE_TYPES.B, name)
 
 
 def all_revenues(folder, sheetname):
@@ -165,9 +151,9 @@ if __name__ == '__main__':
 
     TARGET_FILE_NAME = '1月/应收账款账龄分析表-1月-基础表.xlsx'
     FOLDER = '1月'
-    save_result_filename = 'revenue.xlsx'
+    SAVE_RESULT_FILENAME = 'revenue.xlsx'
     revenues = list(all_revenues(FOLDER, '分渠道营收统计'))
-    write_all(TARGET_FILE_NAME, save_result_filename, revenues)
+    write_all(TARGET_FILE_NAME, SAVE_RESULT_FILENAME, revenues)
 
 
 

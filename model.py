@@ -1,3 +1,5 @@
+from enum import Enum
+
 class DataClassCard:
     def __init__(self, id, total, rows):
         # id no in first row
@@ -26,3 +28,10 @@ class Loc:
         self.max_column = max_column
 
 
+class REVENUE_TYPES(Enum):
+    # this related to `first_col` param of write_unit function
+    A = '2022'
+    B = '2021'
+
+    def is_a(self):
+        return self == REVENUE_TYPES.A

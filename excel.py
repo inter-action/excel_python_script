@@ -13,7 +13,7 @@ def get_working_sheet(workbook, sheet_title):
         sheet = workbook[sheet_title]
         return sheet
     else:
-        print(f'sheetnames: {workbook.sheetnames}')
+        print(f'sheet_title: {sheet_title} not found in workbook')
         return None
 
 def get_workbook(filename, data_only):

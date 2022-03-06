@@ -10,3 +10,6 @@ run:
 
 revenue:
 	python3 revenue.py
+
+account_receivable:
+	python3 account_receivable.py

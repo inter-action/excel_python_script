@@ -11,9 +11,10 @@ import model
         
 
 class AccountReceivable:
-    def __init__(self, id, cols):
+    def __init__(self, id, cols, filename):
         self.rows = cols
         self.id = id
+        self.filename = filename
 
 
     def __str__(self):
@@ -71,20 +72,21 @@ class IdRange:
 
 #---------- parse logic
 
-def parse(wb, account_by_year: AccountReceivableByYear):
+def parse(wb, account_by_year: AccountReceivableByYear, filename: str):
     names = source_sheet_names(wb)
     for name in names:
+        print(f'sub sheet name: {name}')
         ws = excel.get_working_sheet(wb, name)
         if ws is None: continue
 
-        account_recivable = parse_by_sheet(ws)
+        account_recivable = parse_by_sheet(ws, filename)
         if model.REVENUE_TYPES.A.value in name:
             account_by_year.add_rows(model.REVENUE_TYPES.A, account_recivable)
         if model.REVENUE_TYPES.B.value in name:
             account_by_year.add_rows(model.REVENUE_TYPES.B, account_recivable)
     
 
-def parse_by_sheet(sheet):
+def parse_by_sheet(sheet, filename):
     ranges = parse_source_id_range(sheet)
     for id, range in ranges.items():
         cols_result = []
@@ -94,7 +96,7 @@ def parse_by_sheet(sheet):
                 one_col.append(cell.value)
             cols_result.append(one_col)
 
-        yield AccountReceivable(id, cols_result[0])
+        yield AccountReceivable(id, cols_result[0], filename)
 
 def parse_source_id_range(target_sheet):
     range = IdRange()
@@ -112,10 +114,10 @@ def source_sheet_names(wb):
 
 def all_account_receivable(folder):
     account_receivable_by_year = AccountReceivableByYear()
-    for filepath, _ in excel.excel_files(folder):
+    for filepath, filename in excel.excel_files(folder):
         wb = excel.get_workbook(filepath, True)
         try:
-            parse(wb, account_receivable_by_year)
+            parse(wb, account_receivable_by_year, filepath)
         finally:
             wb.close()
     return account_receivable_by_year
@@ -142,7 +144,7 @@ def write_to_sheet(sum_sheet, write_range: IdRange, datas: typing.List[AccountRe
     for account_receivable in datas:
         range = write_range.get_range(account_receivable.id)
         if range is None:
-            print(f'range not found for in sheet: {sum_sheet}, id: {account_receivable.id}')
+            print(f'range not found for in sheet: {sum_sheet}, id: {account_receivable.id}, file: {account_receivable.filename}')
         else:
             for col in excel.iter_cols_by_range(sum_sheet, range):
                 for idx, cell in enumerate(col):
@@ -153,6 +155,7 @@ def write_all(target_file, save_filename, account_by_year: AccountReceivableByYe
     wb_target = excel.get_workbook(target_file, True)
     try:
         for sheetname in sum_sheet_names(wb_target):
+            print(f'sum sheet name: {sheetname}')
             ws_target = excel.get_working_sheet(wb_target, sheetname)
             range = parse_write_range(ws_target)
             if model.REVENUE_TYPES.A.value in sheetname:
@@ -176,13 +179,13 @@ if __name__ == '__main__':
     # print(f'{src_names}')
 
 
-    wb_sum = excel.get_workbook('1月/应收账款账龄分析表-1月-基础表.xlsx', True)
-    print(f'{sum_sheet_names(wb_sum)}')
+    # wb_sum = excel.get_workbook('1月/应收账款账龄分析表-1月-基础表.xlsx', True)
+    # print(f'{sum_sheet_names(wb_sum)}')
 
     # ws_sum = excel.get_working_sheet(wb_sum, '2022年12月营收')
 
     TARGET_FILE_NAME = '1月/应收账款账龄分析表-1月-基础表.xlsx'
-    FOLDER = '1月'
+    FOLDER = '2月'
     SAVE_RESULT_FILENAME = 'account_receivable.xlsx'
     account_receivable_by_year = all_account_receivable(FOLDER)
     write_all(TARGET_FILE_NAME, SAVE_RESULT_FILENAME, account_receivable_by_year)

@@ -62,7 +62,7 @@ def write_unit(target_sheet, target_range: WriteRange, revenue: Revenue, first_c
                     cell.value = revenue.col_b()[i]
                 else:
                     cell.value = revenue.col_c()[i]
-                print(f'write cell: {cell}, with value {cell.value}')
+                # print(f'write cell: {cell}, with value {cell.value}')
                 i += 1
     else:
         print(f'[WARN] range not found for id: {revenue.id}')
@@ -150,7 +150,7 @@ if __name__ == '__main__':
     # names = revenue_sheetnames(wb_sum)
 
     TARGET_FILE_NAME = '1月/应收账款账龄分析表-1月-基础表.xlsx'
-    FOLDER = '1月'
+    FOLDER = '2月'
     SAVE_RESULT_FILENAME = 'revenue.xlsx'
     revenues = list(all_revenues(FOLDER, '分渠道营收统计'))
     write_all(TARGET_FILE_NAME, SAVE_RESULT_FILENAME, revenues)

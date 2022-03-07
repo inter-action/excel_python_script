@@ -150,23 +150,21 @@ def all_cards_in_dir(dir_path, sub_sheet_name):
             if wb is not None: wb.close()
 
 
-# TARGET_SHEET_NAME = '2022年应收账款账龄分析表'
-TARGET_SHEET_NAME = '2021年应收账款账龄分析表'
-
-# SUB_SHEET_NAME = '2022年应收账款账龄分析表'
-SUB_SHEET_NAME = '2021年同期应收账款账龄分析表'
-
-
+task_entries = [
+    ('2022年应收账款账龄分析表', '2022年应收账款账龄分析表'),
+    ('2021年应收账款账龄分析表', '2021年同期应收账款账龄分析表')
+]
 summary_sheet_file = './1月/应收账款账龄分析表-1月-基础表.xlsx'
 target_wb = excel.get_workbook(summary_sheet_file, False)
-target_ws = excel.get_working_sheet(target_wb, TARGET_SHEET_NAME)
-FOLDER = '1月'
+FOLDER = '2月'
 try:
-    for cards in all_cards_in_dir(FOLDER, SUB_SHEET_NAME):
-        if len(cards) == 2:
-            print(f'parse_data 1: {str(cards[0])}')
-            print(f'parse_data 2: {str(cards[1])}')
-            open_to_write(target_ws, cards)
+    for sum_sheet_name, sub_sheet_name in task_entries: 
+        target_ws = excel.get_working_sheet(target_wb, sum_sheet_name)
+        for cards in all_cards_in_dir(FOLDER, sub_sheet_name):
+            if len(cards) == 2:
+                print(f'parse_data 1: {str(cards[0])}')
+                print(f'parse_data 2: {str(cards[1])}')
+                open_to_write(target_ws, cards)
 
     target_wb.save(filename="sumary.xlsx")
 except Exception as inst:

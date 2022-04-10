@@ -7,8 +7,8 @@ import typing
 import excel
 import utils
 import model
-
-        
+import config
+import os
 
 class AccountReceivable:
     def __init__(self, id, cols, filename):
@@ -184,8 +184,6 @@ if __name__ == '__main__':
 
     # ws_sum = excel.get_working_sheet(wb_sum, '2022年12月营收')
 
-    TARGET_FILE_NAME = '1月/应收账款账龄分析表-1月-基础表.xlsx'
-    FOLDER = '2月'
-    SAVE_RESULT_FILENAME = 'account_receivable.xlsx'
-    account_receivable_by_year = all_account_receivable(FOLDER)
-    write_all(TARGET_FILE_NAME, SAVE_RESULT_FILENAME, account_receivable_by_year)
+    SAVE_RESULT_FILENAME = config.dist('account_receivable.xlsx')
+    account_receivable_by_year = all_account_receivable(config.FOLDER)
+    write_all(config.SUMMARY_SHEET_FILE, SAVE_RESULT_FILENAME, account_receivable_by_year)

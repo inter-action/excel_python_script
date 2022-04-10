@@ -14,6 +14,7 @@ import traceback
 from pprint import pprint
 import model
 import excel
+import config
 
 
 def parse_data(sheet):
@@ -154,19 +155,17 @@ task_entries = [
     ('2022年应收账款账龄分析表', '2022年应收账款账龄分析表'),
     ('2021年应收账款账龄分析表', '2021年同期应收账款账龄分析表')
 ]
-summary_sheet_file = './1月/应收账款账龄分析表-1月-基础表.xlsx'
-target_wb = excel.get_workbook(summary_sheet_file, False)
-FOLDER = '2月'
+target_wb = excel.get_workbook(config.SUMMARY_SHEET_FILE, False)
 try:
     for sum_sheet_name, sub_sheet_name in task_entries: 
         target_ws = excel.get_working_sheet(target_wb, sum_sheet_name)
-        for cards in all_cards_in_dir(FOLDER, sub_sheet_name):
+        for cards in all_cards_in_dir(config.FOLDER, sub_sheet_name):
             if len(cards) == 2:
                 print(f'parse_data 1: {str(cards[0])}')
                 print(f'parse_data 2: {str(cards[1])}')
                 open_to_write(target_ws, cards)
 
-    target_wb.save(filename="sumary.xlsx")
+    target_wb.save(filename=config.dist("sumary.xlsx"))
 except Exception as inst:
     traceback.print_exc()
     print('got undefined error: ', inst, inst.__cause__, inst.__traceback__)

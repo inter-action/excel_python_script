@@ -1,11 +1,13 @@
 
-install_deps:
-	pip3 install -r requirements.txt
+all: start
 
-freeze:
-	pip3 freeze > requirements.txt
+start: clean summary revenue account_receivable
 
-run:
+clean:
+	rm -rf dist
+	mkdir dist
+
+summary:
 	python3 main.py
 
 revenue:
@@ -13,3 +15,12 @@ revenue:
 
 account_receivable:
 	python3 account_receivable.py
+
+
+install_deps:
+	pip3 install -r requirements.txt
+
+freeze:
+	pip3 freeze > requirements.txt
+
+.PHONY: summary clean revenue account_receivable

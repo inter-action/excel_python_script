@@ -3,6 +3,7 @@ import traceback
 import excel
 import utils
 import model
+import config
 
 RANGE = 'A2:C8'
 
@@ -112,6 +113,7 @@ def target_revenue_sheetnames(workbook):
 def all_revenues(folder, sheetname):
     for filepath, _ in excel.excel_files(folder):
         wb = excel.get_workbook(filepath, True)
+        print(f'process file: {filepath}')
         try:
             ws = excel.get_working_sheet(wb, sheetname)
             file_id = utils.get_file_id(filepath)
@@ -149,11 +151,9 @@ if __name__ == '__main__':
     # range = parse_write_range()
     # names = revenue_sheetnames(wb_sum)
 
-    TARGET_FILE_NAME = '1月/应收账款账龄分析表-1月-基础表.xlsx'
-    FOLDER = '2月'
-    SAVE_RESULT_FILENAME = 'revenue.xlsx'
-    revenues = list(all_revenues(FOLDER, '分渠道营收统计'))
-    write_all(TARGET_FILE_NAME, SAVE_RESULT_FILENAME, revenues)
+    SAVE_RESULT_FILENAME = config.dist('revenue.xlsx')
+    revenues = list(all_revenues(config.FOLDER, '分渠道营收统计'))
+    write_all(config.SUMMARY_SHEET_FILE, SAVE_RESULT_FILENAME, revenues)
 
 
 

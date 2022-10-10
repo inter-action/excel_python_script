@@ -23,4 +23,10 @@ install_deps:
 freeze:
 	pip3 freeze > requirements.txt
 
+step_up:
+	python3 -m venv .env
+
+active:
+	source .env/bin/activate
+	
 .PHONY: summary clean revenue account_receivable

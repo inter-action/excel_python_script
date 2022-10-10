@@ -75,7 +75,7 @@ class IdRange:
 def parse(wb, account_by_year: AccountReceivableByYear, filename: str):
     names = source_sheet_names(wb)
     for name in names:
-        print(f'sub sheet name: {name}')
+        print(f'parsed sub sheet name: {name}, filename: {filename}')
         ws = excel.get_working_sheet(wb, name)
         if ws is None: continue
 
@@ -105,7 +105,8 @@ def parse_source_id_range(target_sheet):
         range.set_range(cell.value, cell.row)
     return range
 
-SOURCE_SHEET_NAME_REG = re.compile(r'\d{4}年\d+月应收账款')
+
+SOURCE_SHEET_NAME_REG = re.compile(r'\d{4}年\d+月以内应收账款')
 def source_sheet_names(wb):
     result = list(filter(lambda x: SOURCE_SHEET_NAME_REG.match(x), wb.sheetnames)) 
     return result

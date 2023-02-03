@@ -152,8 +152,8 @@ def all_cards_in_dir(dir_path, sub_sheet_name):
 
 
 task_entries = [
-    ('2022年应收账款账龄分析表', '2022年应收账款账龄分析表'),
-    ('2021年应收账款账龄分析表', '2021年同期应收账款账龄分析表')
+    ('2023年应收账款账龄分析表', '2023年应收账款账龄分析表'),
+    ('2022年应收账款账龄分析表', '2022年同期应收账款账龄分析表')
 ]
 target_wb = excel.get_workbook(config.SUMMARY_SHEET_FILE, False)
 try:

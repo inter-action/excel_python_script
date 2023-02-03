@@ -31,7 +31,7 @@ class Loc:
 class REVENUE_TYPES(Enum):
     # this related to `first_col` param of write_unit function
     A = '2022'
-    B = '2021'
+    B = '2023'
 
     def is_a(self):
         return self == REVENUE_TYPES.A

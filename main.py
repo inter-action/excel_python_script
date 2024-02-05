@@ -144,7 +144,7 @@ def all_cards_in_dir(dir_path, sub_sheet_name):
             print(f'sheet result is:\n ${result}')
 
             if (len(result) != 2):
-                print(f'no matching data found in {pathname}-> {working_title}')
+                print(f'warn: no matching data found in {pathname}-> {working_title}')
 
             yield result
         finally:
@@ -152,13 +152,15 @@ def all_cards_in_dir(dir_path, sub_sheet_name):
 
 
 task_entries = [
-    ('2023年应收账款账龄分析表', '2023年应收账款账龄分析表'),
-    ('2022年应收账款账龄分析表', '2022年同期应收账款账龄分析表')
+    ('{}年应收账款账龄分析表'.format(model.REVENUE_TYPES.B.value), '{}年应收账款账龄分析表'.format(model.REVENUE_TYPES.B.value)),
+    ('{}年应收账款账龄分析表'.format(model.REVENUE_TYPES.A.value), '{}年同期应收账款账龄分析表'.format(model.REVENUE_TYPES.A.value))
 ]
 target_wb = excel.get_workbook(config.SUMMARY_SHEET_FILE, False)
 try:
     for sum_sheet_name, sub_sheet_name in task_entries: 
         target_ws = excel.get_working_sheet(target_wb, sum_sheet_name)
+        if target_ws is None:
+            raise Exception(f'sheetname: {sub_sheet_name} can not be found in summary sheet: {config.SUMMARY_SHEET_FILE}')
         for cards in all_cards_in_dir(config.FOLDER, sub_sheet_name):
             if len(cards) == 2:
                 print(f'parse_data 1: {str(cards[0])}')

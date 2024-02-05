@@ -3,6 +3,8 @@ all: start
 
 start: clean summary revenue account_receivable
 	zip -rm dist dist
+	open .
+	
 
 clean:
 	rm -rf dist

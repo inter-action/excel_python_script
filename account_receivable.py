@@ -32,11 +32,11 @@ class AccountReceivableByYear:
             self.items[item_type.value] = []
         self.items[item_type.value].extend(datas)
 
-    # suppose to be 2023
+    # suppose to be year A
     def a_rows(self):
         return self.items.get(model.REVENUE_TYPES.A.value)
 
-    # suppose to be 2023
+    # suppose to be year (A+1)
     def b_rows(self):
         return self.items.get(model.REVENUE_TYPES.B.value)
 

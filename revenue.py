@@ -14,11 +14,11 @@ class Revenue:
         self.rows = cols
         self.id = id
 
-    # 2022
+    # year A, eg 2023
     def col_b(self):
         return self.rows[1]
 
-    # 2023
+    # year A + 1
     def col_c(self):
         return self.rows[2]
 
@@ -51,7 +51,7 @@ def parse(sheet, id, range = RANGE):
 
 def write_unit(target_sheet, target_range: WriteRange, revenue: Revenue, first_col = True):
     """
-    :first_col: usually decide we take 2022 col or 2023 cols as datasource.
+    :first_col: usually decide we take A year col or (A+1) year cols as datasource.
     """
     range = target_range.get_range(revenue.id)
     if range is not None:
@@ -129,8 +129,8 @@ if __name__ == '__main__':
     # wb = excel.get_workbook('1月/7101/7101应收账款账龄分析表-22.1月.xlsx', True)
     # ws = excel.get_working_sheet(wb, '分渠道营收统计')
     # revenue = parse(ws, 7101)
-    # print(f'2022: {revenue.col_b()}')
-    # print(f'2023: {revenue.col_c()}')
+    # print(f'2023: {revenue.col_b()}')
+    # print(f'2024: {revenue.col_c()}')
 
     # wb_sum = excel.get_workbook('1月/应收账款账龄分析表-1月-基础表.xlsx', True)
     # ws_sum = excel.get_working_sheet(wb_sum, '2022年12月营收')
